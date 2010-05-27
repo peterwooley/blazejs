@@ -1,0 +1,4 @@
+blaze.js
+Higher level drawing API for HTML5 Canvas.
+
+The purpose of blaze.js is to provide a Drawing API for HTML5 Canvas that provides an experience similar to Adobe Flash.
