@@ -14,10 +14,44 @@
 				
 				// Draw graphics into each Blaze		
 				main.graphics.fillRect(0,0,20,20);
-				child.graphics.fillRect(20,20,40,40);
+				main.alpha = .5;
+				
+				child.x = child.y = 10;
+				child.alpha = .5;
+				child.rotation = 60;
+				child.graphics.fillRect(0,0,40,40);
+				//child.visible = false;
 				
 				// Add one sprite as a child and render into the body
 				main.add(child).render(document.body);
+			}
+			
+			
+			var planet = function(numBuildings, diameter) {
+				var stage = blz(),
+					body = blz.circle(diameter),
+					building = blz.sprite(),
+					buildings = [];
+					
+				body.x(blz.CENTER).y(blz.CENTER).frame(function() {
+					this.rotation += .1;
+				});
+				
+				body.save();
+				
+				for(var i = 0; i < numBuildings; i++) {
+					building = building.clone();
+					
+					body.graphics.rotate = 2*Math.PI / numBuildings;
+					
+					building.
+					
+					buildings.push();
+					
+					
+				}
+				
+				body.restore();	
 			}
 			
 		</script>

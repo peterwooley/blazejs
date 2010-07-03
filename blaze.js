@@ -12,6 +12,12 @@
 	var Blaze = function(settings) { return new Blaze.fn.init(settings); };
 		
 	Blaze.fn = Blaze.prototype = {
+		
+		alpha: 1,
+		rotation: 0,
+		visible: true,
+		x: 0,
+		y: 0,
 	
 		/**
 		 * Constructs a new Blaze sprite.
@@ -55,27 +61,54 @@
 		 * @return If element is not given, returns the rendered canvas element.
 		 */
 		render: function(element) {
-			// Render canvas to element
-			var canvas = this.canvas;
+			if(!this.visible || !this.alpha) {
+				return false;
+			}
 			
-			if(this.children.length) {
-				var scratch = Blaze.canvas(),
-					graphics = scratch.getContext('2d');
-					
-				graphics.drawImage(this.canvas, 0, 0);
+			try {
 				
-				for(var i in this.children) {
-					graphics.drawImage(this.children[i].render(), 0, 0);
+				var oldAlpha = this.graphics.globalAlpha;
+				
+				// Render canvas to element
+				var canvas = this.canvas;
+				
+				if(this.children.length) {
+					var scratch = Blaze.canvas(),
+						graphics = scratch.getContext('2d');
+						
+					graphics.drawImage(this.canvas, this.x, this.y);
+					
+					for(var i in this.children) {
+						child = this.children[i];
+						rendered = child.render();
+						if(rendered) {
+							graphics.save();
+							graphics.globalAlpha = child.alpha;
+							graphics.translate(child.x, child.y);
+							graphics.rotate(child.rotationToRadians());
+							
+							graphics.drawImage(rendered, child.x, child.y);			graphics.restore();
+						}
+					}
+					
+					canvas = scratch;
 				}
 				
-				canvas = scratch;
+				if(element) {
+					var wrap = blz.canvas();
+					wrap.getContext('2d').globalAlpha = this.alpha;
+					wrap.getContext('2d').drawImage(canvas, this.x, this.y);
+					element.appendChild(wrap);
+				} else {
+					return canvas;
+				}
+			} finally {
+				this.graphics.globalAlpha = oldAlpha;
 			}
-			
-			if(element) {
-				element.appendChild(canvas);
-			} else {
-				return canvas;
-			}
+		},
+		
+		rotationToRadians: function() {
+			return this.rotation * (Math.PI / 180);
 		}
 	}
 	
